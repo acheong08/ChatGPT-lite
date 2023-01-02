@@ -113,7 +113,8 @@ class Chatbot:
     def validate_token(self, token):
         if token is None:
             return False
-        parsed = json.loads(base64.b64decode(token.split('.')[1]).decode())
+        parsed = json.loads(base64.b64decode(
+            token.split('.')[1] + "===").decode())
         return datetime.datetime.now().timestamp() <= parsed['exp']
 
     def get_tokens(self):
