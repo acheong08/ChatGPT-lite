@@ -88,7 +88,9 @@ class Chatbot:
         def ask_callback(data):
             if 'error' in data:
                 print(f'Error: {data["error"]}')
-                raise Exception(data['error'])
+                data["answer"] = "Error: " + data["error"]
+                data_queue.put_nowait(data)
+                return
             conversation['parent_id'] = data['messageId']
             conversation['conversation_id'] = data['conversationId']
             # Put the data in the queue
