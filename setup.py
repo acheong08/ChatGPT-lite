@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name="ChatGPT_lite",
-    version="0.0.3",
+    version="0.0.4",
     license="GNU General Public License v2.0",
     author="Antonio Cheong",
     author_email="acheong@student.dalat.org",
@@ -14,7 +14,7 @@ setup(
     url="https://github.com/acheong08/ChatGPT-lite",
     install_requires=[
         "asyncio",
-        "python-socketio",
+        "python-socketio[client]",
     ],
     long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
