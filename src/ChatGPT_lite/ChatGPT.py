@@ -12,7 +12,8 @@ class Chatbot:
     def __init__(self, session_token, bypass_node="https://gpt.pawan.krd"):
         self.ready = False
         self.socket = socketio.Client()
-        self.socket.connect(bypass_node, transports=['websocket', 'polling'])
+        self.socket.connect(
+            f'{bypass_node}/?client=python&version=1.0.2&versionCode=102', transports=['websocket', 'polling'])
         self.session_token = session_token
         self.conversations = []
         self.auth = None
@@ -81,35 +82,21 @@ class Chatbot:
             await self.get_tokens()
         conversation = self.get_conversation_by_id(id)
 
-        # Create a queue to store the data from the callback function
-        data_queue = asyncio.Queue()
-
-        # Declare a callback function to process the response
-        def ask_callback(data):
-            if 'error' in data:
-                print(f'Error: {data["error"]}')
-                data["answer"] = "Error occurred"
-                data_queue.put_nowait(data)
-                return
-            conversation['parent_id'] = data['messageId']
-            conversation['conversation_id'] = data['conversationId']
-            # Put the data in the queue
-            data_queue.put_nowait(data)
-
         # Use the callback function to process the response
-        self.socket.emit('askQuestion', {
+        data = self.socket.call(event='askQuestion', data={
             'prompt': prompt,
             'parentId': conversation['parent_id'],
             'conversationId': conversation['conversation_id'],
             'auth': self.auth
-        }, callback=ask_callback)
+        }, timeout=180)
 
         # Keep checking the queue for data
-        while data_queue.empty():
-            await self.wait(1)
-
-        # Get the data from the queue
-        data = data_queue.get_nowait()
+        if 'error' in data:
+            print(f'Error: {data["error"]}')
+            data["answer"] = "Error occurred"
+            return data
+        conversation['parent_id'] = data['messageId']
+        conversation['conversation_id'] = data['conversationId']
         return data
 
     def validate_token(self, token):
@@ -121,7 +108,7 @@ class Chatbot:
 
     def get_tokens(self):
         time.sleep(1)  # equivalent to await self.wait(1000)
-        self.socket.emit('getSession', self.session_token,
+        self.socket.emit(event='getSession', data=self.session_token,
                          callback=self.get_tokens_callback)
 
     def get_tokens_callback(self, data):
