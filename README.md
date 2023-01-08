@@ -5,7 +5,7 @@ Uses API by [Pawan](https://github.com/PawanOsman/)
 This is not open source. [PawanOsman](https://github.com/PawanOsman/) can see all your requests and your session token.
 
 # Install
-`pip3 install ChatGPT-lite`
+`pip3 install ChatGPT-lite --upgrade`
 
 # Setup:
 
