@@ -13,7 +13,7 @@ class Chatbot:
         self.ready = False
         self.socket = socketio.Client()
         self.socket.connect(
-            f'{bypass_node}/?client=python&version=1.0.2&versionCode=102', transports=['websocket', 'polling'])
+            f'{bypass_node}/?client=python&version=1.0.5&versionCode=105', transports=['websocket', 'polling'])
         self.session_token = session_token
         self.conversations = []
         self.auth = None
