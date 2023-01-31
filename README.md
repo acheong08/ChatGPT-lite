@@ -1,3 +1,5 @@
+> # Official API has been released. I will update [revChatGPT](https://github.com/acheong08/ChatGPT) to use it later today.
+
 # Lightweight version of ChatGPT
 Uses API by [Pawan](https://github.com/PawanOsman/)
 
